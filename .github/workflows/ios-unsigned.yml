@@ -1,0 +1,60 @@
+name: Build iOS IPA (Free Sideload)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'lib/**'
+      - 'ios/**'
+      - 'assets/**'
+      - 'tool/**'
+      - 'pubspec.yaml'
+      - '.github/workflows/ios-unsigned.yml'
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Ensure iOS project exists
+        run: flutter create --platforms=ios --org com.dht11monitor .
+
+      - name: Apply DHT11 iOS permissions and settings
+        run: dart run tool/prepare_ios.dart
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build unsigned iOS app
+        run: flutter build ios --release --no-codesign
+
+      - name: Package unsigned IPA
+        shell: bash
+        run: |
+          set -e
+          rm -rf Payload DHT11-Monitor-unsigned.ipa
+          mkdir -p Payload
+          cp -R build/ios/iphoneos/Runner.app Payload/Runner.app
+          ditto -c -k --sequesterRsrc --keepParent Payload DHT11-Monitor-unsigned.ipa
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: DHT11-Monitor-unsigned-IPA
+          path: DHT11-Monitor-unsigned.ipa
+          if-no-files-found: error
+          retention-days: 7
