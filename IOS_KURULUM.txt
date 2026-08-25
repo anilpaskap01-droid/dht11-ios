@@ -1,0 +1,64 @@
+DHT11 MONITOR v1.5 PRO - iOS UYUMLULUK
+=======================================
+
+Bu paket Android surumunu bozmaz. iOS icin gereken platform/izin dosyalarini
+Flutter'in kendi surumune gore olusturmak icin IOS_HAZIRLA.bat eklendi.
+
+WINDOWS'TA ONCE
+---------------
+1) ZIP'i C:\dhst11 uzerine cikar.
+2) IOS_HAZIRLA.bat dosyasini calistir.
+
+Script sunlari yapar:
+- flutter create --platforms=ios --org com.dht11monitor .
+- iOS Info.plist'e Bluetooth izin aciklamalarini ekler.
+- iOS Info.plist'e konum izni aciklamasini ekler.
+- iOS minimum surumunu 13.0 yapar.
+- geolocator icin sadece foreground konum izni kullanilacak sekilde
+  BYPASS_PERMISSION_LOCATION_ALWAYS=1 ayarini Podfile'a ekler.
+- flutter pub get
+- flutter analyze
+
+IOS'TA CALISACAK OZELLIKLER
+---------------------------
+- BLE tarama / cihaz secme
+- Kaydedilen ESP32 BLE cihazina baglanma
+- 181A Environmental Sensing servisi
+- 2A6E sicaklik
+- 2A6F nem
+- BLE notify ile canli sensor verisi
+- GPS konumu
+- Open-Meteo hava durumu ve hava kalitesi
+- Sensor gecmisi, grafikler, kalibrasyon ve v1.5 Pro analiz ozellikleri
+
+IPHONE'A YUKLEME
+----------------
+Windows'ta iPhone'a flutter run yapilamaz. Xcode macOS gerektirir.
+Mac'in yoksa bu projeyi GitHub'a yukleyip Codemagic ile macOS build alabilirsin.
+Pakette codemagic.yaml bulunuyor.
+
+Codemagic tarafinda:
+- App Store Connect API key entegrasyonu ekle.
+- Entegrasyon adini "codemagic" yap veya codemagic.yaml'daki adi degistir.
+- Apple Developer tarafinda bundle identifier:
+  com.dht11monitor.dhst11
+  kullan.
+- Workflow: ios-testflight
+- Build baslat.
+
+Build basarili oldugunda IPA olusur ve TestFlight'a gonderilir.
+
+ONEMLI IOS DAVRANISI
+--------------------
+- iOS'ta uygulama Bluetooth'u kendi basina acamaz. Bluetooth kapaliysa kullanici
+  Ayarlar/Control Center'dan acar.
+- Ilk BLE kullaniminda iOS Bluetooth izin penceresi gosterir.
+- Ilk GPS kullaniminda iOS konum izin penceresi gosterir.
+- Bu paket arka planda surekli konum istemez.
+- Arka planda BLE calismasi varsayilan olarak acilmadi; App Store incelemesinde
+  gereksiz background capability istememek icin foreground kullanim hedeflendi.
+
+NOT
+---
+Weather.com yoktur. Hava verisi Open-Meteo'dan HTTPS ile gelir; bu nedenle
+App Transport Security icin genis bir HTTP istisnasi eklenmemistir.

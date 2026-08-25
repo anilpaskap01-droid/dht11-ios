@@ -1,0 +1,71 @@
+DHT11 MONITOR v1.4
+==================
+
+Bu sürümde Weather.com tamamen kaldırıldı.
+
+YENİ HAVA SİSTEMİ
+-----------------
+- Telefonun gerçek GPS koordinatı geolocator ile alınır.
+- İl / ilçe adı Android reverse-geocoding ile bulunur.
+- Hava durumu Open-Meteo'dan koordinata göre alınır.
+- API key gerekmez.
+- Manuel şehir araması yine vardır.
+- Konum kartında GPS doğruluğu gösterilir.
+- Koordinatlar hava ekranında görülebilir.
+
+YENİ ÇEVRE ÖZELLİKLERİ
+----------------------
+- Avrupa AQI
+- US AQI
+- PM2.5
+- PM10
+- NO2
+- Ozon
+- Hava kalitesi değerlendirmesi
+- UV risk seviyesi
+- Dışarı çıkma özeti
+- Yağış / rüzgar / UV / hava kalitesine göre kısa öneri
+- Sensör iç ortamı ↔ dış hava karşılaştırması
+- 12 saatlik tahmin
+- 7 günlük tahmin
+- GPS ile tek tuş yeniden konum bulma
+
+TASARIM
+-------
+- Daha koyu premium arka plan
+- Gradient kartlar
+- Yeni cyan/mor vurgu renkleri
+- Daha belirgin metrik kartları
+- Yeni hava & çevre ekran düzeni
+
+BLUETOOTH
+---------
+- ESP32 otomatik aranmaz.
+- Sensör sekmesi > Cihaz Ekle ile BLE taraması başlatılır.
+- Kullanıcı cihazı kendisi seçer.
+- Seçilen cihaz kaydedilir.
+
+KURULUM
+-------
+ZIP içeriğini mevcut C:\dhst11 klasörünün üzerine çıkar.
+
+Sonra:
+  cd C:\dhst11
+  flutter clean
+  flutter pub get
+  flutter run
+
+veya:
+  RUN_FLUTTER.bat
+
+İLK AÇILIŞ
+----------
+Hava sekmesi konum izni ister.
+"Uygulamayı kullanırken izin ver" seçeneğini kullan.
+
+NOT
+---
+Bu ZIP çalışma ortamında hazırlandı. Buradaki çalışma ortamı senin Windows
+bilgisayarına ve kablosuz S24 FE cihazına bağlı olmadığı için gerçek
+flutter run burada yürütülemez. RUN_FLUTTER.bat bunu senin C:\dhst11
+klasöründe çalıştırmak için eklenmiştir.

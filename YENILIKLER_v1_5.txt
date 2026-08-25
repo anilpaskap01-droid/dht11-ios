@@ -1,0 +1,51 @@
+DHT11 MONITOR v1.5 PRO
+======================
+
+YENİ ÖZELLİKLER
+---------------
+- Sıcaklık kalibrasyonu: -5°C / +5°C
+- Nem kalibrasyonu: -15% / +15%
+- Veri yumuşatma: kapalı / 3 / 5 / 7 ölçüm
+- Geçmiş kayıt aralığı: 5 sn / 20 sn / 1 dk / 5 dk
+- Geçmiş kapasitesi 500 -> 2000 ölçüm
+- BLE bağlantısı koparsa isteğe bağlı otomatik yeniden bağlanma
+  (tarama yapmaz; yalnızca seçilen cihaza bağlanır)
+- BLE kalite skoru 0–100
+- Bağlantı süresi
+- Veri tazeliği
+- 15 dakikalık sıcaklık trendi
+- 15 dakikalık nem trendi
+- VPD (Vapor Pressure Deficit)
+- Gerçek buhar basıncı
+- Konfor skoru 0–100
+- Küf riski
+- Yoğuşma riski
+- Sensör geçmişini CSV olarak panoya kopyalama
+- Gelişmiş Tanılama bölümü
+
+KORUNANLAR
+----------
+- ESP32 kendiliğinden aranmaz.
+- Cihaz Ekle ekranından BLE cihazını kullanıcı seçer.
+- Open-Meteo hava durumu + hava kalitesi
+- Telefon GPS konumu
+- API key yok
+- Weather.com yok
+- geocoding Flutter paketi yok
+- Önceki AAR compileSdk geocoding_android hatası geri gelmez.
+
+KURULUM
+-------
+ZIP içeriğini C:\dhst11 klasörünün üzerine çıkar.
+
+Sonra:
+FINAL_FIX_AND_RUN.bat
+
+veya:
+cd C:\dhst11
+flutter clean
+flutter pub get
+flutter run
+
+
+iOS compatibility helper files added.

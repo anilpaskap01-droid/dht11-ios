@@ -1,0 +1,39 @@
+DHST11 FINAL BUILD FIX
+======================
+
+Bu fix geocoding paketini TAMAMEN kaldırır.
+
+Neden?
+------
+geocoding 3.0.0 -> geocoding_android compileSdk 33 kullanıyordu.
+Yeni AndroidX bağımlılıkları compileSdk 34+ istiyordu.
+Bu yüzden build:
+  :geocoding_android:checkDebugAarMetadata
+adımında çöküyordu.
+
+Yeni sistem:
+------------
+- GPS koordinatı: geolocator
+- İl/ilçe/şehir adı: BigDataCloud free client reverse geocoding HTTP endpoint
+- API key YOK
+- geocoding Flutter paketi YOK
+- Hava: Open-Meteo
+- Hava kalitesi: Open-Meteo
+
+Kurulum:
+--------
+1) ZIP içeriğini C:\dhst11 üzerine çıkar.
+2) Dosyaların üzerine yaz.
+3) FINAL_FIX_AND_RUN.bat çalıştır.
+
+BAT:
+- flutter pub remove geocoding
+- flutter pub add geolocator:13.0.2
+- flutter clean
+- .dart_tool siler
+- pubspec.lock siler
+- flutter pub get
+- dependency ağacında geocoding kalmadığını doğrular
+- flutter run
+
+"source value 8 is obsolete" WARNING satırları build hatası değildir.

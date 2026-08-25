@@ -1,0 +1,51 @@
+workflows:
+  ios-testflight:
+    name: DHT11 Monitor - iOS TestFlight
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+
+    # Codemagic UI'da App Store Connect entegrasyonunun adini
+    # "codemagic" olarak ayarlarsan bu satir direkt calisir.
+    integrations:
+      app_store_connect: codemagic
+
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.dht11monitor.dhst11
+
+    scripts:
+      - name: Ensure iOS platform exists
+        script: |
+          flutter create --platforms=ios --org com.dht11monitor .
+          dart run tool/prepare_ios.dart
+
+      - name: Get Flutter packages
+        script: flutter pub get
+
+      - name: Install CocoaPods
+        script: |
+          cd ios
+          pod install
+
+      - name: Analyze
+        script: flutter analyze
+
+      - name: Configure signing
+        script: xcode-project use-profiles
+
+      - name: Build IPA
+        script: flutter build ipa --release
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        submit_to_app_store: false
