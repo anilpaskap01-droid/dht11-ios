@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Dhst11</string>
+	<string>DHT11 Monitor</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -43,14 +43,7 @@
 					<string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
 					<key>UISceneStoryboardFile</key>
 					<string>Main</string>
-				
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>DHT11 Monitor, ESP32 sicaklik ve nem sensorune Bluetooth Low Energy ile baglanmak icin Bluetooth erisimi kullanir.</string>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>DHT11 Monitor, ESP32 BLE sensoru ile iletisim kurmak icin Bluetooth erisimi kullanir.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>DHT11 Monitor, hava durumunu bulundugunuz konuma gore gostermek icin uygulama acikken konumunuzu kullanir.</string>
-</dict>
+				</dict>
 			</array>
 		</dict>
 	</dict>
@@ -73,5 +66,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>DHT11 Monitor, ESP32 sicaklik ve nem sensorune Bluetooth Low Energy ile baglanmak icin Bluetooth erisimi kullanir.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>DHT11 Monitor, ESP32 BLE sensoru ile iletisim kurmak icin Bluetooth erisimi kullanir.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>DHT11 Monitor, hava durumunu bulundugunuz konuma gore gostermek icin uygulama acikken konumunuzu kullanir.</string>
 </dict>
 </plist>

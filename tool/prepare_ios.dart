@@ -3,7 +3,7 @@ import 'dart:io';
 void main() {
   final iosDir = Directory('ios');
   if (!iosDir.existsSync()) {
-    stderr.writeln('HATA: ios klasoru yok. Once: flutter create --platforms=ios --org com.dht11monitor .');
+    stderr.writeln('HATA: ios klasoru yok.');
     exitCode = 1;
     return;
   }
@@ -11,7 +11,10 @@ void main() {
   patchInfoPlist();
   patchPodfile();
   patchDeploymentTarget();
-  stdout.writeln('iOS ayarlari hazirlandi.');
+
+  if (exitCode == 0) {
+    stdout.writeln('iOS ayarlari hazirlandi.');
+  }
 }
 
 void patchInfoPlist() {
@@ -23,14 +26,22 @@ void patchInfoPlist() {
   }
 
   var text = file.readAsStringSync();
-  const marker = '</dict>';
-  if (!text.contains(marker)) return;
+
+  final displayNamePattern = RegExp(
+    r'(<key>CFBundleDisplayName</key>\s*<string>)[^<]*(</string>)',
+  );
+  if (displayNamePattern.hasMatch(text)) {
+    text = text.replaceFirstMapped(
+      displayNamePattern,
+      (m) => '${m.group(1)}DHT11 Monitor${m.group(2)}',
+    );
+  }
 
   final additions = <String>[];
 
   void addKey(String key, String value) {
     if (!text.contains('<key>$key</key>')) {
-      additions.add('''\n\t<key>$key</key>\n\t<string>$value</string>''');
+      additions.add('\n\t<key>$key</key>\n\t<string>$value</string>');
     }
   }
 
@@ -48,26 +59,36 @@ void patchInfoPlist() {
   );
 
   if (!text.contains('<key>CFBundleDisplayName</key>')) {
-    additions.add('''\n\t<key>CFBundleDisplayName</key>\n\t<string>DHT11 Monitor</string>''');
+    additions.add('\n\t<key>CFBundleDisplayName</key>\n\t<string>DHT11 Monitor</string>');
   }
 
   if (additions.isNotEmpty) {
-    text = text.replaceFirst(marker, '${additions.join()}\n$marker');
-    file.writeAsStringSync(text);
+    final closingIndex = text.lastIndexOf('</dict>');
+    if (closingIndex < 0) {
+      stderr.writeln('HATA: Info.plist ana </dict> etiketi bulunamadi.');
+      exitCode = 1;
+      return;
+    }
+
+    text = '${text.substring(0, closingIndex)}${additions.join()}\n${text.substring(closingIndex)}';
   }
+
+  file.writeAsStringSync(text);
 }
 
 void patchPodfile() {
   final file = File('ios/Podfile');
   if (!file.existsSync()) {
-    stderr.writeln('HATA: ios/Podfile bulunamadi.');
-    exitCode = 1;
+    stdout.writeln('Bilgi: ios/Podfile yok. Yeni Flutter iOS Swift Package Manager yapisinda bu normal olabilir; Podfile ayari atlaniyor.');
     return;
   }
 
   var text = file.readAsStringSync();
 
-  final platformPattern = RegExp(r"^#?\s*platform\s+:ios,\s*'[^']+'", multiLine: true);
+  final platformPattern = RegExp(
+    r"^#?\s*platform\s+:ios,\s*'[^']+'",
+    multiLine: true,
+  );
   if (platformPattern.hasMatch(text)) {
     text = text.replaceFirst(platformPattern, "platform :ios, '13.0'");
   } else {
@@ -80,7 +101,15 @@ void patchPodfile() {
   if (text.contains(flutterSettings) && !text.contains(macroMarker)) {
     text = text.replaceFirst(
       flutterSettings,
-      '''$flutterSettings\n\n    # DHT11 Monitor only needs foreground location.\n    if target.name == 'geolocator_apple'\n      target.build_configurations.each do |config|\n        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['\$(inherited)']\n        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << '$macroMarker'\n      end\n    end''',
+      '''$flutterSettings
+
+    # DHT11 Monitor only needs foreground location.
+    if target.name == 'geolocator_apple'
+      target.build_configurations.each do |config|
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['\$(inherited)']
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << '$macroMarker'
+      end
+    end''',
     );
   }
 

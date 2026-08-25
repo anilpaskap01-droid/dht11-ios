@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -30,11 +30,20 @@ jobs:
       - name: Flutter version
         run: flutter --version
 
-      - name: Ensure iOS project exists
-        run: flutter create --platforms=ios --org com.dht11monitor .
+      - name: Verify iOS project
+        shell: bash
+        run: |
+          test -f ios/Runner.xcodeproj/project.pbxproj
+          test -f ios/Runner/Info.plist
+
+      - name: Enable Swift Package Manager
+        run: flutter config --enable-swift-package-manager
 
       - name: Apply DHT11 iOS permissions and settings
         run: dart run tool/prepare_ios.dart
+
+      - name: Validate Info.plist
+        run: plutil -lint ios/Runner/Info.plist
 
       - name: Get dependencies
         run: flutter pub get
