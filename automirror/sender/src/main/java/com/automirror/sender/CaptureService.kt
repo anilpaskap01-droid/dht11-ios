@@ -107,6 +107,7 @@ class CaptureService : Service() {
     private fun startProjection(resultCode: Int, resultData: Intent) {
         val projectionManager = getSystemService(MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
         val projection = projectionManager.getMediaProjection(resultCode, resultData)
+            ?: throw IllegalStateException("Ekran yakalama izni alınamadı")
         mediaProjection = projection
 
         projectionCallback = object : MediaProjection.Callback() {
@@ -374,7 +375,7 @@ class CaptureService : Service() {
         private const val MIME = "video/avc"
         private const val STREAM_PORT = 8989
         private const val DISCOVERY_PORT = 8988
-        private const val MAGIC = 0x414D4952 // AMIR
+        private const val MAGIC = 0x414D4952
         private const val PROTOCOL_VERSION = 1
     }
 }
